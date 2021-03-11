@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient: IDisposable
+    public partial class BitGoClient: IDisposable, IBitGoClient
     {
         public const string MainPublicApi = "https://www.bitgo.com/api/v2";
         public const string TestPublicApi = "https://test.bitgo.com/api/v2";

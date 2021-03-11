@@ -38,14 +38,14 @@ namespace TestApp
                 return;
             }
 
-            var client = new BitGoClient(accessToken, apiUrl);
+            IBitGoClient client = new BitGoClient(accessToken, apiUrl);
 
             try
             {
 
-                //await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                //await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
-                //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
+                await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
+                await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
+                await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "test:2");
 
             }
@@ -57,7 +57,7 @@ namespace TestApp
             }
         }
 
-        static async Task TestAddresses(BitGoClient client, string coin, string walletId)
+        static async Task TestAddresses(IBitGoClient client, string coin, string walletId)
         {
             Console.Clear();
 
@@ -96,7 +96,7 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestGetTransfer(BitGoClient client, string coin, string walletId)
+        static async Task TestGetTransfer(IBitGoClient client, string coin, string walletId)
         {
             Console.Clear();
 
@@ -126,7 +126,7 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestExpress(BitGoClient client, string coin, string fromWalletId, string toWalletId, string toUser)
+        static async Task TestExpress(IBitGoClient client, string coin, string fromWalletId, string toWalletId, string toUser)
         {
             Console.Clear();
 
