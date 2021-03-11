@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using MyJetWallet.BitGo.Models;
-using MyJetWallet.BitGo.Models.Enterprise;
 using MyJetWallet.BitGo.Models.Express;
-using MyJetWallet.BitGo.Models.PendingApproval;
-using MyJetWallet.BitGo.Models.Shared;
 
 namespace MyJetWallet.BitGo
 {
