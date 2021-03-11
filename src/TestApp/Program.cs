@@ -46,8 +46,7 @@ namespace TestApp
                 //await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
                 //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0",
-                    "6048c3e46fd304026642e95b6a28f976", "test:2");
+                await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "test:2");
 
             }
             catch (BitGoErrorException ex)
