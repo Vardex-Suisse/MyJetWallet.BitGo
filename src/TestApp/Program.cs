@@ -43,10 +43,10 @@ namespace TestApp
             try
             {
 
-                await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
+                //await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
+                //await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
                 await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "test:2");
+                //await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "test:2");
 
             }
             catch (BitGoErrorException ex)
@@ -119,6 +119,16 @@ namespace TestApp
                     var label = transfer.Entries.FirstOrDefault(e => e.Value > 0)?.Label;
                     Console.WriteLine($"{transfer.Type}|{transfer.TransferId}|{transfer.BaseValueString}|{transfer.Coin}|{label}|{transfer.SequenceId}");
                 }
+            }
+
+            Console.WriteLine();
+            var tr = await client.TryGetTransferAsync(coin, walletId, "60117704aa058f0006f7c2d8414f1b13");
+            Console.WriteLine($"{tr.Type}|{tr.TransferId}|{tr.BaseValueString}|{tr.Coin}|{tr.SequenceId}");
+
+            tr = await client.TryGetTransferAsync(coin, walletId, "60117704aa058f0006f7c2d8414f1b22");
+            if (tr == null)
+            {
+                Console.WriteLine("Transfer do not exist");
             }
 
             Console.WriteLine();
