@@ -302,10 +302,10 @@ namespace MyJetWallet.BitGo
         WebCallResult<AddressInfo> CreateAddress(
             string coin,
             string walletId,
-            int chain,
             string label,
-            string gasPrice,
-            bool lowPriority,
+            int chain = 0,
+            string gasPrice = default,
+            bool lowPriority = false,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
@@ -323,10 +323,10 @@ namespace MyJetWallet.BitGo
         Task<WebCallResult<AddressInfo>> CreateAddressAsync(
             string coin,
             string walletId,
-            int chain,
             string label,
-            string gasPrice,
-            bool lowPriority,
+            int chain = 0,
+            string gasPrice = default,
+            bool lowPriority = false,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>

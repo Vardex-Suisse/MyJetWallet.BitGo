@@ -90,12 +90,12 @@ namespace MyJetWallet.BitGo
         public WebCallResult<AddressInfo> CreateAddress(
             string coin,
             string walletId,
-            int chain,
             string label,
+            int chain,
             string gasPrice,
             bool lowPriority,
             CancellationToken cancellationToken = default(CancellationToken))
-            => this.CreateAddressAsync(coin, walletId, chain, label, gasPrice, lowPriority, cancellationToken).Result;
+            => this.CreateAddressAsync(coin, walletId, label, chain, gasPrice, lowPriority, cancellationToken).Result;
 
         /// <summary>
         /// This API call is used to create a new receive address for your wallet. You may choose to call this API whenever a deposit is made. The BitGo API supports millions of addresses.
@@ -112,10 +112,10 @@ namespace MyJetWallet.BitGo
         public async Task<WebCallResult<AddressInfo>> CreateAddressAsync(
             string coin,
             string walletId,
-            int chain,
             string label,
-            string gasPrice,
-            bool lowPriority,
+            int chain = 0,
+            string gasPrice = default,
+            bool lowPriority = false,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var data = new RequestData_AddressCreate

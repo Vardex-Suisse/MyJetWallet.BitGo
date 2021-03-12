@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using MyJetWallet.BitGo;
@@ -45,8 +46,9 @@ namespace TestApp
 
                 //await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
-                await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                //await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "test:2");
+                //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
+                await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
+                //await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "jetwallet|-|alex|-|SP-alex");
 
             }
             catch (BitGoErrorException ex)
@@ -87,7 +89,7 @@ namespace TestApp
             Console.WriteLine("---------");
 
             var label = $"test:{count + 1}";
-            var newAddress = await client.CreateAddressAsync(coin, walletId, 0, label, null, false);
+            var newAddress = await client.CreateAddressAsync(coin, walletId, label);
             Console.WriteLine("New address:");
             Console.WriteLine($"[{index}]{newAddress.Data.AddressId}|{newAddress.Data.Label}|{newAddress.Data.Address}");
 
@@ -107,7 +109,9 @@ namespace TestApp
             foreach (var transfer in transferList.Data.Transfers)
             {
                 var label = transfer.Entries.FirstOrDefault(e => e.Value > 0)?.Label;
-                Console.WriteLine($"{transfer.Type}|{transfer.TransferId}|{transfer.BaseValueString}|{transfer.Coin}|{label}|{transfer.SequenceId}");
+                var amountSend = transfer.Entries.FirstOrDefault(e => e.Value < 0)?.Value;
+                var amountReceive = transfer.Entries.FirstOrDefault(e => e.Value > 0)?.Value;
+                Console.WriteLine($"{transfer.Type}|{transfer.TransferId}|{transfer.BaseValueString}|{transfer.Coin}|{label}|{transfer.SequenceId}|{amountSend}|{amountReceive}");
             }
 
             while (!string.IsNullOrEmpty(transferList.Data.NextBatchPrevId))
@@ -117,13 +121,18 @@ namespace TestApp
                 foreach (var transfer in transferList.Data.Transfers)
                 {
                     var label = transfer.Entries.FirstOrDefault(e => e.Value > 0)?.Label;
-                    Console.WriteLine($"{transfer.Type}|{transfer.TransferId}|{transfer.BaseValueString}|{transfer.Coin}|{label}|{transfer.SequenceId}");
+                    var amountSend = transfer.Entries.FirstOrDefault(e => e.Value < 0)?.Value;
+                    var amountReceive = transfer.Entries.FirstOrDefault(e => e.Value > 0)?.Value;
+                    Console.WriteLine($"{transfer.Type}|{transfer.TransferId}|{transfer.BaseValueString}|{transfer.Coin}|{label}|{transfer.SequenceId}|{amountSend}|{amountReceive}");
                 }
             }
 
             Console.WriteLine();
-            var tr = await client.TryGetTransferAsync(coin, walletId, "60117704aa058f0006f7c2d8414f1b13");
-            Console.WriteLine($"{tr.Type}|{tr.TransferId}|{tr.BaseValueString}|{tr.Coin}|{tr.SequenceId}");
+            var tr = await client.TryGetTransferAsync(coin, walletId, "604a5d5a4086ec00067606a028fe3e9b");
+            Console.WriteLine(JsonSerializer.Serialize(tr, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            }));
 
             tr = await client.TryGetTransferAsync(coin, walletId, "60117704aa058f0006f7c2d8414f1b22");
             if (tr == null)
@@ -143,6 +152,9 @@ namespace TestApp
             var ping = await client.PingExpressAsync();
             Console.WriteLine($"Ping result: {ping.Data.Status}");
 
+            //var address = await client.CreateAddressAsync(coin, toWalletId, toUser);
+            //var addr = address.Data.Address;
+
             var address = await client.GetAddressesAsync(coin, toWalletId, labelContains: toUser);
             if (address.Data.Addresses.Length != 1)
             {
@@ -150,7 +162,7 @@ namespace TestApp
                 return;
             }
 
-            var addr = address.Data.Addresses.First().Address;
+            var addr = address.Data.Addresses.Last().Address;
 
             var verifyResult = await client.VerifyAddressAsync(coin, addr);
             Console.WriteLine($"Address [{addr}] verify: {verifyResult.Data.IsValid}");
@@ -158,7 +170,7 @@ namespace TestApp
             var sid = $"st_{DateTime.UtcNow:O}";
 
             var sendResult = await client.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: "1000000", address: addr, sequenceId: sid);
-            Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
+            Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}, rid: {sendResult.Data.Transfer.TransferId}");
             
 
 
