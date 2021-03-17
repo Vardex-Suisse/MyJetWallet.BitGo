@@ -76,8 +76,8 @@ namespace MyJetWallet.BitGo.Models.Transfer
         [JsonProperty("vSize")]
         public long VSize { get; internal set; }
         
-        [JsonProperty("coinSpecific")]
-        public CoinSpecificItem CoinSpecific { get; internal set; }
+        //[JsonProperty("coinSpecific")]
+        //public CoinSpecificItem CoinSpecific { get; internal set; }
         
         [JsonProperty("sequenceId")]
         public string SequenceId { get; internal set; }

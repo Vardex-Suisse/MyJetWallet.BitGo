@@ -46,8 +46,17 @@ namespace TestApp
 
                 //await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
+
+                //await TestAddresses(client, "talgo", "604f7e965095850076f7d697fcea9995", "jetwallet|-|alex|-|SP-alex");
+
                 //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
+                //await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
+
+                //await TestGetTransfer(client, "talgo", "604f7e965095850076f7d697fcea9995");
+                await TestGetTransfer(client, "txrp", "604f8990e32c2f000600f5411c68dacd");
+
+                
+
                 //await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "jetwallet|-|alex|-|SP-alex");
 
             }
@@ -59,7 +68,7 @@ namespace TestApp
             }
         }
 
-        static async Task TestAddresses(IBitGoClient client, string coin, string walletId)
+        static async Task TestAddresses(IBitGoClient client, string coin, string walletId, string label = null)
         {
             Console.Clear();
 
@@ -88,7 +97,7 @@ namespace TestApp
 
             Console.WriteLine("---------");
 
-            var label = $"test:{count + 1}";
+            label ??= $"test:{count + 1}";
             var newAddress = await client.CreateAddressAsync(coin, walletId, label);
             Console.WriteLine("New address:");
             Console.WriteLine($"[{index}]{newAddress.Data.AddressId}|{newAddress.Data.Label}|{newAddress.Data.Address}");
@@ -170,8 +179,9 @@ namespace TestApp
             var sid = $"st_{DateTime.UtcNow:O}";
 
             var sendResult = await client.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: "1000000", address: addr, sequenceId: sid);
-            Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}, rid: {sendResult.Data.Transfer.TransferId}");
-            
+            Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
+            Console.WriteLine($"rid: {sendResult.Data.Transfer.TransferId}");
+
 
 
 
