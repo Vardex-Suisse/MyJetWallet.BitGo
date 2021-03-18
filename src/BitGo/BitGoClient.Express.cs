@@ -31,7 +31,10 @@ namespace MyJetWallet.BitGo
         {
             var resp = await this.PostAsync<SendCoinResult>($"{this.EndpointUrl}/{coin}/wallet/{walletId}/sendcoins", request, cancellationToken);
 
-            resp.Data.IsRequireApproval = resp.ResponseStatusCode == HttpStatusCode.Accepted;
+            if (resp.Data != null)
+            {
+                resp.Data.IsRequireApproval = resp.ResponseStatusCode == HttpStatusCode.Accepted;
+            }
 
             return resp;
         }

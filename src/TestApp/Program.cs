@@ -184,10 +184,16 @@ namespace TestApp
             var sid = $"st_{DateTime.UtcNow:O}";
 
 
+            ((BitGoClient) client).ThrowThenErrorResponse = false;
+
             var sendResult = await client.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
             Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
             Console.WriteLine($"rid: {sendResult.Data.Transfer.TransferId}");
             Console.WriteLine(JsonConvert.SerializeObject(sendResult.Data, Formatting.Indented));
+
+
+            sendResult = await client.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
+            Console.WriteLine(JsonConvert.SerializeObject(sendResult, Formatting.Indented));
 
 
 

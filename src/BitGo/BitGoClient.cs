@@ -8,6 +8,7 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 using MyJetWallet.BitGo.Models;
 using Newtonsoft.Json;
 
@@ -96,6 +97,8 @@ namespace MyJetWallet.BitGo
             _lastHttpClient = _httpClient;
             _httpClient = client;
             _lastHttpSetupTime = DateTime.UtcNow;
+
+            Console.WriteLine($"[{DateTime.UtcNow:O}]Bitgo setup new HttpClient");
         }
 
         private bool CheckForErrors(string data)
