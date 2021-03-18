@@ -1,20 +1,22 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace MyJetWallet.BitGo.Models
 {
+    [DataContract]
     public class Error
     {
-        [JsonProperty("name", Required = Required.Default)]
+        [JsonProperty("name", Required = Required.Default), DataMember(Order = 1)]
         public string Code { get; set; }
         
-        [JsonProperty("error", Required = Required.Default)]
+        [JsonProperty("error", Required = Required.Default), DataMember(Order = 2)]
         public string ErrorMessage { get; set; }
         
-        [JsonProperty("requestId", Required = Required.Default)]
+        [JsonProperty("requestId", Required = Required.Default), DataMember(Order = 3)]
         public string RequestId { get; set; }
 
-        [JsonProperty("message", Required = Required.Default)]
+        [JsonProperty("message", Required = Required.Default), DataMember(Order = 4)]
         public string Message { get; set; }
 
         internal Error()
