@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -50,19 +51,35 @@ namespace TestApp
 
                 //await TestAddresses(client, "talgo", "604f7e965095850076f7d697fcea9995", "jetwallet|-|alex|-|SP-alex");
 
-                //await TestAddresses(client, "tbtc", "6013e7b3d11c3704c6b47cf6191e74a8", "jetwallet|-|alex|-|SP-alex");
+                //await TestAddresses(client, "tbtc", "6054ba9ca9cc0e0024a867a7d8b401b2", "jetwallet|-|alex|-|SP-alex");
+                //await TestAddresses(client, "tbtc", "6054ba9ca9cc0e0024a867a7d8b401b2");
+
+                //await TestAddresses(client, "txrp", "60584aaded0090000628ce59c01f3a5e");
+
+                //await TestAddresses(client, "xlm", "6059baa1db5c7e02866ab97d17e557b6");
+
+                //await TestGetTransferById(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a", "605b162bc6cfd60006c880f8f140e5f9");
+
+                await TestGetTransfer(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a");
 
                 //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
+
+                //await TestGetTransfer(client, "txrp", "60584aaded0090000628ce59c01f3a5e");
 
                 //await TestGetTransfer(client, "talgo", "604f7e965095850076f7d697fcea9995");
                 //await TestGetTransfer(client, "txrp", "604f8990e32c2f000600f5411c68dacd");
 
 
 
-                //await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "jetwallet|-|alex|-|SP-alex");
+                //await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "jetwallet|-|alex|-|SP-alex", "100000000");
 
-                await TestExpress(client, "tbtc", "6013e7b3d11c3704c6b47cf6191e74a8", "604f5afa9ca16d000682de35465fc6e8", "jetwallet|-|alex|-|SP-alex", "13000");
+                //await TestExpress(client, "tbtc", "6013e7b3d11c3704c6b47cf6191e74a8", "604f5afa9ca16d000682de35465fc6e8", "jetwallet|-|alex|-|SP-alex", "10000");
+
+                //await TestExpress(client, "txrp", "60584aaded0090000628ce59c01f3a5e", "60584aaded0090000628ce59c01f3a5e", "jetwallet|-|alex|-|SP-alex", "11000000");
+
+
+                //transfer":"605b162bc6cfd60006c880f8f140e5f9","coin":"teos","type":"transfer","state":"confirmed","wallet":"60584dcc6f5d31001d5a59371aeeb60a"
 
             }
             catch (BitGoErrorException ex)
@@ -102,11 +119,25 @@ namespace TestApp
 
             Console.WriteLine("---------");
 
-            label ??= $"test:{count + 1}";
-            var newAddress = await client.CreateAddressAsync(coin, walletId, label);
-            Console.WriteLine("New address:");
-            Console.WriteLine($"[{index}]{newAddress.Data.AddressId}|{newAddress.Data.Label}|{newAddress.Data.Address}");
+            
 
+            label ??= $"test:{count + 1}";
+
+
+            var existAddress = await client.GetAddressesAsync(coin, walletId, labelContains: label, limit: 50);
+            if (existAddress.Data.TotalAddressCount == 0)
+            {
+                var newAddress = await client.CreateAddressAsync(coin, walletId, label);
+                Console.WriteLine("New address:");
+                Console.WriteLine($"[{index}]{newAddress.Data.AddressId}|{newAddress.Data.Label}|{newAddress.Data.Address}");
+            }
+            else
+            {
+                var newAddress = existAddress.Data.Addresses.Last();
+                Console.WriteLine("Existing address:");
+                Console.WriteLine($"[{index}]{newAddress.AddressId}|{newAddress.Label}|{newAddress.Address}");
+            }
+            
             Console.WriteLine();
             Console.WriteLine("Press to continue");
             Console.ReadLine();
@@ -142,17 +173,19 @@ namespace TestApp
             }
 
             Console.WriteLine();
-            var tr = await client.TryGetTransferAsync(coin, walletId, "604a5d5a4086ec00067606a028fe3e9b");
+            Console.WriteLine("Press to continue");
+            Console.ReadLine();
+        }
+
+        static async Task TestGetTransferById(IBitGoClient client, string coin, string walletId, string transferId)
+        {
+            Console.Clear();
+
+            var tr = await client.TryGetTransferAsync(coin, walletId, transferId);
             Console.WriteLine(JsonSerializer.Serialize(tr, new JsonSerializerOptions()
             {
                 WriteIndented = true
             }));
-
-            tr = await client.TryGetTransferAsync(coin, walletId, "60117704aa058f0006f7c2d8414f1b22");
-            if (tr == null)
-            {
-                Console.WriteLine("Transfer do not exist");
-            }
 
             Console.WriteLine();
             Console.WriteLine("Press to continue");
@@ -162,6 +195,8 @@ namespace TestApp
         static async Task TestExpress(IBitGoClient client, string coin, string fromWalletId, string toWalletId, string toUser, string amount)
         {
             Console.Clear();
+
+            ((BitGoClient)client).ThrowThenErrorResponse = false;
 
             var ping = await client.PingExpressAsync();
             Console.WriteLine($"Ping result: {ping.Data.Status}");
@@ -183,8 +218,6 @@ namespace TestApp
 
             var sid = $"st_{DateTime.UtcNow:O}";
 
-
-            ((BitGoClient) client).ThrowThenErrorResponse = false;
 
             var sendResult = await client.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
             Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
@@ -249,6 +282,20 @@ namespace TestApp
             Console.WriteLine();
             Console.WriteLine("Press to continue");
             Console.ReadLine();
+        }
+
+        static async Task ApplyWebhook(IBitGoClient client)
+        {
+            var wallets = new Dictionary<string, string>()
+            {
+                {"6054ba9ca9cc0e0024a867a7d8b401b2", "POC-Bitcoin-2"},
+                {"6054bc003dc1af002b0d54bf5b552f28", "POC-Stellar-5"},
+                {"6054be73b765620006aa87311f43bd47", "POC-Litecoin-2"},
+                {"60584aaded0090000628ce59c01f3a5e", "POC-Ripple-3"},
+                {"60584b79fd3e0500669e2cf9654d726b", "POC-BitcoinCash-3"},
+                {"60584becbc3e2600240548d78e61c02b", "POC-ALGO-3"},
+                {"60584dcc6f5d31001d5a59371aeeb60a", "POC-EOS-3"}
+            };
         }
     }
 }
