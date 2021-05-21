@@ -122,9 +122,13 @@ namespace MyJetWallet.BitGo
             {
                 Chain = chain,
                 Label = label,
-                GasPrice = gasPrice,
                 LowPriority = lowPriority
             };
+
+            if (gasPrice != default)
+            {
+                data.GasPrice = gasPrice;
+            }
 
             return await this.PostAsync<AddressInfo>($"{this.EndpointUrl}/{coin}/wallet/{walletId}/address", data, cancellationToken);
         }
