@@ -60,8 +60,8 @@ namespace TestApp
 
                 //await TestGetTransferById(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a", "605b162bc6cfd60006c880f8f140e5f9");
 
-                await TestGetTransfer(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a");
-
+                // await TestGetTransfer(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a");
+                await ApplyWebhook(client);
                 //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
 
@@ -275,10 +275,6 @@ namespace TestApp
             Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
             Console.WriteLine($"rid: {sendResult.Data.Transfer.TransferId}");
 
-
-
-
-
             Console.WriteLine();
             Console.WriteLine("Press to continue");
             Console.ReadLine();
@@ -286,16 +282,41 @@ namespace TestApp
 
         static async Task ApplyWebhook(IBitGoClient client)
         {
-            var wallets = new Dictionary<string, string>()
+            var wallets = new Dictionary<string, string[]>()
             {
-                {"6054ba9ca9cc0e0024a867a7d8b401b2", "POC-Bitcoin-2"},
-                {"6054bc003dc1af002b0d54bf5b552f28", "POC-Stellar-5"},
-                {"6054be73b765620006aa87311f43bd47", "POC-Litecoin-2"},
-                {"60584aaded0090000628ce59c01f3a5e", "POC-Ripple-3"},
-                {"60584b79fd3e0500669e2cf9654d726b", "POC-BitcoinCash-3"},
-                {"60584becbc3e2600240548d78e61c02b", "POC-ALGO-3"},
-                {"60584dcc6f5d31001d5a59371aeeb60a", "POC-EOS-3"}
+                {"608be313dafba70006b7daa94a40d640", new []{"tbtc", "POC-Bitcoin-2"}},
+                // {"6054bc003dc1af002b0d54bf5b552f28", new []{"txlm", "POC-Stellar-5"}},
+                // {"6054be73b765620006aa87311f43bd47", new []{"TLTC", "POC-Litecoin-2"}},
+                // {"60584aaded0090000628ce59c01f3a5e", new []{"TXRP", "POC-Ripple-3"}},
+                // {"60584b79fd3e0500669e2cf9654d726b", new []{"TBCASH", "POC-BitcoinCash-3"}},
+                // {"60584becbc3e2600240548d78e61c02b", new []{"TALGO", "POC-ALGO-3"}},
+                // {"60584dcc6f5d31001d5a59371aeeb60a", new []{"TEOS", "POC-EOS-3"}}
             };
+            
+            Console.Clear();
+            
+            foreach (var walletInfo in wallets)
+            {
+                var webhooks = await client.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
+                Console.WriteLine(JsonSerializer.Serialize(webhooks, new JsonSerializerOptions() { WriteIndented = true }));
+                
+                foreach (var dataWebhook in webhooks.Data.Webhooks)
+                {
+                    var remove = await client.RemoveWebhookAsync(walletInfo.Value[0], walletInfo.Key,
+                        dataWebhook.Type, dataWebhook.Url, dataWebhook.Id);
+                    Console.WriteLine(JsonSerializer.Serialize(remove, new JsonSerializerOptions() { WriteIndented = true }));
+                    var add = await client.AddWebhookAsync(walletInfo.Value[0], walletInfo.Key,
+                        dataWebhook.Type, dataWebhook.AllToken, dataWebhook.Url, dataWebhook.Label, 1, false);
+                    Console.WriteLine(JsonSerializer.Serialize(remove, new JsonSerializerOptions() { WriteIndented = true }));
+                }
+                
+                webhooks = await client.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
+                Console.WriteLine(JsonSerializer.Serialize(webhooks, new JsonSerializerOptions() { WriteIndented = true }));
+            }
+            
+            Console.WriteLine();
+            Console.WriteLine("Press to continue");
+            Console.ReadLine();
         }
     }
 }

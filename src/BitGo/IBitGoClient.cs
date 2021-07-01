@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MyJetWallet.BitGo.Models;
@@ -11,6 +12,7 @@ using MyJetWallet.BitGo.Models.Shared;
 using MyJetWallet.BitGo.Models.Transfer;
 using MyJetWallet.BitGo.Models.User;
 using MyJetWallet.BitGo.Models.Wallet;
+using MyJetWallet.BitGo.Models.Webhook;
 
 namespace MyJetWallet.BitGo
 {
@@ -982,6 +984,81 @@ namespace MyJetWallet.BitGo
             string enterpriseId,
             string[] coin = null,
             bool? isCustodial = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// List webhooks set up on the wallet
+        /// </summary>
+        /// <param name="coin">A cryptocurrency or token ticker symbol. Example: "btc"</param>
+        /// <param name="walletId">Coin Wallet Address. Example: "59cd72485007a239fb00282ed480da1f"</param>
+        /// <param name="type">Enum: "transfer" "transaction" "pendingapproval" "address_confirmation" Type of event to listen to (can be transfer or pendingapproval).</param>
+        /// <param name="allToken">Default: false Triggers on coin transfers and token transfers for ETH and Stellar.</param>
+        /// <param name="url">uri. URL to fire the webhook to.</param>
+        /// <param name="label">Label of the new webhook.</param>
+        /// <param name="numConfirmations">Number of confirmations before triggering the webhook. If 0 or unspecified, requests will be sent to the callback endpoint when the transfer is first seen and when it is confirmed.</param>
+        /// <param name="listenToFailureStates">Whether or not to listen to failed transactions on chain.</param>
+        /// <returns></returns>
+        WebCallResult<WebhookInfo> AddWebhook(
+            string coin,
+            string walletId,
+            string type,
+            bool allToken,
+            string url,
+            string label,
+            int numConfirmations,
+            bool listenToFailureStates,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<WebCallResult<WebhookInfo>> AddWebhookAsync(
+            string coin,
+            string walletId,
+            string type,
+            bool allToken,
+            string url,
+            string label,
+            int numConfirmations,
+            bool listenToFailureStates,
+            CancellationToken cancellationToken = default(CancellationToken));
+        
+        /// <summary>
+        /// List webhooks set up on the wallet
+        /// </summary>
+        /// <param name="coin">A cryptocurrency or token ticker symbol. Example: "btc"</param>
+        /// <param name="walletId">Coin Wallet Address. Example: "59cd72485007a239fb00282ed480da1f"</param>
+        /// <returns></returns>
+        WebCallResult<WebhookInfoList> ListWebhooks(
+            string coin,
+            string walletId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<WebCallResult<WebhookInfoList>> ListWebhooksAsync(
+            string coin,
+            string walletId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Removing a webhook will cause new events of the specified type to no longer trigger HTTP callbacks to your URLs
+        /// </summary>
+        /// <param name="coin">A cryptocurrency or token ticker symbol. Example: "btc"</param>
+        /// <param name="walletId">Coin Wallet Address. Example: "59cd72485007a239fb00282ed480da1f"</param>
+        /// <param name="type">Enum: "transfer" "transaction" "pendingapproval" "address_confirmation" Type of event to listen to (can be transfer or pendingapproval).</param>
+        /// <param name="url">uri</param>
+        /// <param name="id">^[0-9a-f]{32}$ </param>
+        /// <returns></returns>
+        WebCallResult<WebhookRemoveResponse> RemoveWebhook(
+            string coin,
+            string walletId,
+            string type,
+            string url,
+            string id,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<WebCallResult<WebhookRemoveResponse>> RemoveWebhookAsync(
+            string coin,
+            string walletId,
+            string type,
+            string url,
+            string id,
             CancellationToken cancellationToken = default(CancellationToken));
     }
 }
