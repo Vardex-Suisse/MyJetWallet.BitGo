@@ -229,6 +229,19 @@ namespace MyJetWallet.BitGo
 
             return await this.GetAsync<EnterpriseWalletLimits>($"{this.EndpointUrl}/enterprise/{enterpriseId}/walletLimits" + query, cancellationToken);
         }
+
+        public WebCallResult<EnterpriseFeeWalletBalance> GetEnterpriseFeeWalletBalance(string enterpriseId,
+            string coin,
+            CancellationToken cancellationToken = default(CancellationToken)) =>
+            this.GetEnterpriseFeeWalletBalanceAsync(enterpriseId, coin, cancellationToken).Result;
+
+        public async Task<WebCallResult<EnterpriseFeeWalletBalance>> GetEnterpriseFeeWalletBalanceAsync(string enterpriseId, string coin,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await this.GetAsync<EnterpriseFeeWalletBalance>(
+                $"{this.EndpointUrl}/{coin}/enterprise/{enterpriseId}/feeAddressBalance", cancellationToken);
+        }
+
         #endregion
     }
 }

@@ -61,7 +61,8 @@ namespace TestApp
                 //await TestGetTransferById(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a", "605b162bc6cfd60006c880f8f140e5f9");
 
                 // await TestGetTransfer(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a");
-                await ApplyWebhook(client);
+                // await ApplyWebhook(client);
+                await TestEnterpise(client, "teth", "605d56ec87a7fd0006730d335d16b81b");
                 //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
 
@@ -183,6 +184,21 @@ namespace TestApp
 
             var tr = await client.TryGetTransferAsync(coin, walletId, transferId);
             Console.WriteLine(JsonSerializer.Serialize(tr, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            }));
+
+            Console.WriteLine();
+            Console.WriteLine("Press to continue");
+            Console.ReadLine();
+        }
+
+        static async Task TestEnterpise(IBitGoClient client, string coin, string enterprise)
+        {
+            Console.Clear();
+
+            var feeBalance = await client.GetEnterpriseFeeWalletBalanceAsync(enterprise, coin);
+            Console.WriteLine(JsonSerializer.Serialize(feeBalance, new JsonSerializerOptions()
             {
                 WriteIndented = true
             }));

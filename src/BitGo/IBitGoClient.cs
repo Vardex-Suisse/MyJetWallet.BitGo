@@ -987,6 +987,23 @@ namespace MyJetWallet.BitGo
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Gets enterprise's fee wallet balance
+        /// </summary>
+        /// <param name="enterpriseId">string /^[0-9a-f]{32}$/ Example: "585951a5df8380e0e3063e9f12345678"</param>
+        /// <param name="coin">Coin. Example: ["btc"]</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        WebCallResult<EnterpriseFeeWalletBalance> GetEnterpriseFeeWalletBalance(
+            string enterpriseId,
+            string coin = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<WebCallResult<EnterpriseFeeWalletBalance>> GetEnterpriseFeeWalletBalanceAsync(
+            string enterpriseId,
+            string coin = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// List webhooks set up on the wallet
         /// </summary>
         /// <param name="coin">A cryptocurrency or token ticker symbol. Example: "btc"</param>
