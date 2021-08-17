@@ -97,8 +97,6 @@ namespace MyJetWallet.BitGo
             _lastHttpClient = _httpClient;
             _httpClient = client;
             _lastHttpSetupTime = DateTime.UtcNow;
-
-            Console.WriteLine($"[{DateTime.UtcNow:O}]Bitgo setup new HttpClient");
         }
 
         private bool CheckForErrors(string data)
