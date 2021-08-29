@@ -17,6 +17,9 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
         [JsonProperty("walletId")]
         public string WalletId { get; internal set; }
         
+        [JsonProperty("walletLabel")]
+        public string WalletLabel { get; internal set; }
+        
         [JsonProperty("creator")]
         public string Creator { get; internal set; }
         
