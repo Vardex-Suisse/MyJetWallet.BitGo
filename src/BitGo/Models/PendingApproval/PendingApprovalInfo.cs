@@ -27,7 +27,7 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
         public DateTime CreateDate { get; internal set; }
         
         [JsonProperty("info")]
-        public UpdateEnterpriseResponseInfo info { get; internal set; }
+        public Info Info { get; internal set; }
         
         /// <summary>
         /// Enum:"pending" "approved" "rejected"
@@ -42,19 +42,44 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
         /// number >= 1
         /// </summary>
         [JsonProperty("approvalsRequired")]
-        public int approvalsRequired { get; internal set; }
+        public int ApprovalsRequired { get; internal set; }
     }
 
-    public class UpdateEnterpriseResponseInfo
+    public class Info
     {
         [JsonProperty("type")]
         public string Type { get; internal set; }
+        
+        [JsonProperty("transactionRequest")]
+        public TransactionRequest TransactionRequest { get; internal set; }
         
         [JsonProperty("updateEnterpriseRequest")]
         public UpdateEnterpriseRequest UpdateEnterpriseRequest { get; internal set; }
         
         [JsonProperty("updateApprovalsRequiredRequest")]
         public UpdateApprovalsRequiredRequest UpdateApprovalsRequiredRequest { get; internal set; }
+    }
+
+    public class TransactionRequest
+    {
+        [JsonProperty("comment")]
+        public string Comment { get; internal set; }
+        [JsonProperty("requestedAmount")]
+        public string RequestedAmount { get; internal set; }
+        [JsonProperty("sourceWallet")]
+        public string SourceWallet { get; internal set; }
+        [JsonProperty("recipients")]
+        public TransactionRecipient[] Recipients { get; internal set; }
+    }
+
+    public class TransactionRecipient
+    {
+        [JsonProperty("address")]
+        public string Address { get; internal set; }
+        [JsonProperty("amount")]
+        public string Amount { get; internal set; }
+        [JsonProperty("data")]
+        public string Data { get; internal set; }
     }
 
     public class UpdateEnterpriseRequest

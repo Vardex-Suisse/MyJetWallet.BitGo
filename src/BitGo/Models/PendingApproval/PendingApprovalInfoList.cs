@@ -6,6 +6,6 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
     public class PendingApprovalInfoList
     {
         [JsonProperty("pendingApprovals")]
-        public PendingApprovalInfo PendingApprovals { get; internal set; }
+        public PendingApprovalInfo[] PendingApprovals { get; internal set; }
     }
 }
