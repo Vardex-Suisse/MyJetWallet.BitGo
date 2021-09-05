@@ -16,7 +16,7 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
         [JsonProperty("enterprise")]
         public string Enterprise { get; internal set; }
         
-        [JsonProperty("walletId")]
+        [JsonProperty("wallet")]
         public string WalletId { get; internal set; }
         
         [JsonProperty("walletLabel")]
@@ -37,7 +37,7 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
         [JsonProperty("state")]
         public string State { get; internal set; }
         
-        [JsonProperty("walletUserIds")]
+        [JsonProperty("userIds")]
         public string[] WalletUserIds { get; internal set; }
         
         /// <summary>
