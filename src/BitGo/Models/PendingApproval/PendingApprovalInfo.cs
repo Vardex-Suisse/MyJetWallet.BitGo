@@ -74,6 +74,8 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
         public string SourceWallet { get; internal set; }
         [JsonProperty("recipients"), DataMember(Order = 4)]
         public TransactionRecipient[] Recipients { get; internal set; }
+        [JsonProperty("buildParams"), DataMember(Order = 5)]
+        public BuildParams BuildParams { get; internal set; }
     }
 
     [DataContract]
@@ -85,6 +87,16 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
         public string Amount { get; internal set; }
         [JsonProperty("data"), DataMember(Order = 3)]
         public string Data { get; internal set; }
+    }
+
+
+    [DataContract]
+    public class BuildParams
+    {
+        [JsonProperty("recipients"), DataMember(Order = 1)]
+        public TransactionRecipient[] Recipients { get; internal set; }
+        [JsonProperty("sequenceId"), DataMember(Order = 1)]
+        public string SequenceId { get; internal set; }
     }
 
     public class UpdateEnterpriseRequest
