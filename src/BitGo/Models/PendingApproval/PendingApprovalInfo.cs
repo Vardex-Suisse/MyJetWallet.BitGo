@@ -95,7 +95,7 @@ namespace MyJetWallet.BitGo.Models.PendingApproval
     {
         [JsonProperty("recipients"), DataMember(Order = 1)]
         public TransactionRecipient[] Recipients { get; internal set; }
-        [JsonProperty("sequenceId"), DataMember(Order = 1)]
+        [JsonProperty("sequenceId"), DataMember(Order = 2)]
         public string SequenceId { get; internal set; }
     }
 
