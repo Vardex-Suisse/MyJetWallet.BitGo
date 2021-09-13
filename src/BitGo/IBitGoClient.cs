@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MyJetWallet.BitGo.Models;
@@ -831,6 +830,23 @@ namespace MyJetWallet.BitGo
             decimal? maxValue = null,
             int numBlocks = 2,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Returns the wallet's currently configured spending limits and the current amount spent during the periods defined by the spending limits.
+        /// </summary>
+        /// <param name="coin">Example: "btc"</param>
+        /// <param name="walletId">string /^[0-9a-f]{32}$/ Example: "585951a5df8380e0e3063e9f12345678"</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public WebCallResult<SpendingLimits> GetSpendingLimitsForWallet(
+            string coin,
+            string walletId,
+            CancellationToken cancellationToken = default);
+
+        public Task<WebCallResult<SpendingLimits>> GetSpendingLimitsForWalletAsync(
+            string coin,
+            string walletId,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets enterprises list

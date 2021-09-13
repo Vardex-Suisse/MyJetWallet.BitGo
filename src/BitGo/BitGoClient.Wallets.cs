@@ -553,42 +553,34 @@ namespace MyJetWallet.BitGo
 
             return await this.GetAsync<SpendableInfo>($"{this.EndpointUrl}/{coin}/wallet/{walletId}/maximumSpendable" + query, cancellationToken);
         }
+        
+        
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        /// <summary>
+        /// Returns the wallet's currently configured spending limits and the current amount spent during the periods defined by the spending limits.
+        /// </summary>
+        /// <param name="coin">Example: "btc"</param>
+        /// <param name="walletId">string /^[0-9a-f]{32}$/ Example: "585951a5df8380e0e3063e9f12345678"</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public WebCallResult<SpendingLimits> GetSpendingLimitsForWallet(
+            string coin,
+            string walletId,
+            CancellationToken cancellationToken = default)
+            => GetSpendingLimitsForWalletAsync(coin, walletId, cancellationToken).Result;
+        public async Task<WebCallResult<SpendingLimits>> GetSpendingLimitsForWalletAsync(
+            string coin,
+            string walletId,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<SpendingLimits>($"{EndpointUrl}/{coin}/wallet/{walletId}/spending", cancellationToken);
+        }
 
         // buradan devam
 
         // Build a transaction
         // Initiate a transaction
         // Send a half-signed transaction
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #endregion
     }
 }

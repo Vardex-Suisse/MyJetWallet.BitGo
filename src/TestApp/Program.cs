@@ -63,7 +63,8 @@ namespace TestApp
                 // await TestGetTransfer(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a");
                 // await ApplyWebhook(client);
                 // await TestEnterpise(client, "teth", "605d56ec87a7fd0006730d335d16b81b");
-                await TestPendingApproval(client);
+                // await TestPendingApproval(client);
+                await TestSpendingLimits(client);
                 //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
 
@@ -215,6 +216,21 @@ namespace TestApp
 
             var pendingApproval = await client.GetPendingApprovalAsync("6131357fa574d80006ae9d4a079710fd");
             Console.WriteLine(JsonSerializer.Serialize(pendingApproval, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            }));
+
+            Console.WriteLine();
+            Console.WriteLine("Press to continue");
+            Console.ReadLine();
+        }
+
+        static async Task TestSpendingLimits(IBitGoClient client)
+        {
+            Console.Clear();
+
+            var limits = await client.GetSpendingLimitsForWalletAsync("teth","60a6155d49219200062e5dd0291177df");
+            Console.WriteLine(JsonSerializer.Serialize(limits, new JsonSerializerOptions()
             {
                 WriteIndented = true
             }));
