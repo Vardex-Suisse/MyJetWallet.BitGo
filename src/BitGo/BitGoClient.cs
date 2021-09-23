@@ -21,6 +21,11 @@ namespace MyJetWallet.BitGo
         
         public IBitGoApi MainNet => _main;
         public IBitGoApi TestNet => _test;
+        public IBitGoApi Get(bool isMainNet)
+        {
+            if (isMainNet) return MainNet;
+            return TestNet;
+        }
 
         public bool ThrowIfErrorResponse
         {

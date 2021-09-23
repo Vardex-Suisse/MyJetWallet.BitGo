@@ -5,5 +5,7 @@ namespace MyJetWallet.BitGo
         IBitGoApi MainNet { get; }
         
         IBitGoApi TestNet { get; }
+
+        IBitGoApi Get(bool isMainNet);
     }
 }
