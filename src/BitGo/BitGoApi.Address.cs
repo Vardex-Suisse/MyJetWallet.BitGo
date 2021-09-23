@@ -6,7 +6,7 @@ using MyJetWallet.BitGo.Models.Address;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient
+    public partial class BitGoApi
     {
         /// <summary>
         /// List receive addresses on a wallet

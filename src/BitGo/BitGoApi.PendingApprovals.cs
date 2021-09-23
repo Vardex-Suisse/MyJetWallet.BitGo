@@ -6,7 +6,7 @@ using MyJetWallet.BitGo.Models.PendingApproval;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient
+    public partial class BitGoApi
     {
         #region Pending Approvals
         // TODO: Needs to Live Test

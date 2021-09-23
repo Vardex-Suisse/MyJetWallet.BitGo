@@ -41,7 +41,7 @@ namespace TestApp
                 return;
             }
 
-            IBitGoClient client = new BitGoClient(accessToken, apiUrl);
+            IBitGoApi api = new BitGoApi(accessToken, apiUrl);
 
             try
             {
@@ -64,7 +64,7 @@ namespace TestApp
                 // await ApplyWebhook(client);
                 // await TestEnterpise(client, "teth", "605d56ec87a7fd0006730d335d16b81b");
                 // await TestPendingApproval(client);
-                await TestSpendingLimits(client);
+                await TestSpendingLimits(api);
                 //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
                 //await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
 
@@ -93,13 +93,13 @@ namespace TestApp
             }
         }
 
-        static async Task TestAddresses(IBitGoClient client, string coin, string walletId, string label = null)
+        static async Task TestAddresses(IBitGoApi api, string coin, string walletId, string label = null)
         {
             Console.Clear();
 
             var index = 1;
 
-            var addressList =  await client.GetAddressesAsync(coin, walletId, limit: 5);
+            var addressList =  await api.GetAddressesAsync(coin, walletId, limit: 5);
 
             var count = addressList.Data.TotalAddressCount;
             Console.WriteLine($"Address list ({count}):");
@@ -112,7 +112,7 @@ namespace TestApp
 
             while (!string.IsNullOrEmpty(addressList.Data.NextBatchPrevId))
             {
-                addressList = await client.GetAddressesAsync(coin, walletId, limit: 5, prevId: addressList.Data.NextBatchPrevId);
+                addressList = await api.GetAddressesAsync(coin, walletId, limit: 5, prevId: addressList.Data.NextBatchPrevId);
                 foreach (var address in addressList.Data.Addresses)
                 {
                     Console.WriteLine($"[{index}]{address.AddressId}|{address.Label}|{address.Address}|{address.Chain}");
@@ -127,10 +127,10 @@ namespace TestApp
             label ??= $"test:{count + 1}";
 
 
-            var existAddress = await client.GetAddressesAsync(coin, walletId, labelContains: label, limit: 50);
+            var existAddress = await api.GetAddressesAsync(coin, walletId, labelContains: label, limit: 50);
             if (existAddress.Data.TotalAddressCount == 0)
             {
-                var newAddress = await client.CreateAddressAsync(coin, walletId, label);
+                var newAddress = await api.CreateAddressAsync(coin, walletId, label);
                 Console.WriteLine("New address:");
                 Console.WriteLine($"[{index}]{newAddress.Data.AddressId}|{newAddress.Data.Label}|{newAddress.Data.Address}");
             }
@@ -146,11 +146,11 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestGetTransfer(IBitGoClient client, string coin, string walletId)
+        static async Task TestGetTransfer(IBitGoApi api, string coin, string walletId)
         {
             Console.Clear();
 
-            var transferList = await client.GetTransfersAsync(coin, walletId, limit: 5);
+            var transferList = await api.GetTransfersAsync(coin, walletId, limit: 5);
 
             Console.WriteLine("Transfer List:");
             
@@ -164,7 +164,7 @@ namespace TestApp
 
             while (!string.IsNullOrEmpty(transferList.Data.NextBatchPrevId))
             {
-                transferList = await client.GetTransfersAsync(coin, walletId, limit: 5, prevId: transferList.Data.NextBatchPrevId);
+                transferList = await api.GetTransfersAsync(coin, walletId, limit: 5, prevId: transferList.Data.NextBatchPrevId);
 
                 foreach (var transfer in transferList.Data.Transfers)
                 {
@@ -180,11 +180,11 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestGetTransferById(IBitGoClient client, string coin, string walletId, string transferId)
+        static async Task TestGetTransferById(IBitGoApi api, string coin, string walletId, string transferId)
         {
             Console.Clear();
 
-            var tr = await client.TryGetTransferAsync(coin, walletId, transferId);
+            var tr = await api.TryGetTransferAsync(coin, walletId, transferId);
             Console.WriteLine(JsonSerializer.Serialize(tr, new JsonSerializerOptions()
             {
                 WriteIndented = true
@@ -195,11 +195,11 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestEnterpise(IBitGoClient client, string coin, string enterprise)
+        static async Task TestEnterpise(IBitGoApi api, string coin, string enterprise)
         {
             Console.Clear();
 
-            var feeBalance = await client.GetEnterpriseFeeWalletBalanceAsync(enterprise, coin);
+            var feeBalance = await api.GetEnterpriseFeeWalletBalanceAsync(enterprise, coin);
             Console.WriteLine(JsonSerializer.Serialize(feeBalance, new JsonSerializerOptions()
             {
                 WriteIndented = true
@@ -210,11 +210,11 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestPendingApproval(IBitGoClient client)
+        static async Task TestPendingApproval(IBitGoApi api)
         {
             Console.Clear();
 
-            var pendingApproval = await client.GetPendingApprovalAsync("6131357fa574d80006ae9d4a079710fd");
+            var pendingApproval = await api.GetPendingApprovalAsync("6131357fa574d80006ae9d4a079710fd");
             Console.WriteLine(JsonSerializer.Serialize(pendingApproval, new JsonSerializerOptions()
             {
                 WriteIndented = true
@@ -225,11 +225,11 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestSpendingLimits(IBitGoClient client)
+        static async Task TestSpendingLimits(IBitGoApi api)
         {
             Console.Clear();
 
-            var limits = await client.GetSpendingLimitsForWalletAsync("teth","60a6155d49219200062e5dd0291177df");
+            var limits = await api.GetSpendingLimitsForWalletAsync("teth","60a6155d49219200062e5dd0291177df");
             Console.WriteLine(JsonSerializer.Serialize(limits, new JsonSerializerOptions()
             {
                 WriteIndented = true
@@ -240,19 +240,19 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestExpress(IBitGoClient client, string coin, string fromWalletId, string toWalletId, string toUser, string amount)
+        static async Task TestExpress(IBitGoApi api, string coin, string fromWalletId, string toWalletId, string toUser, string amount)
         {
             Console.Clear();
 
-            ((BitGoClient)client).ThrowThenErrorResponse = false;
+            ((BitGoApi)api).ThrowThenErrorResponse = false;
 
-            var ping = await client.PingExpressAsync();
+            var ping = await api.PingExpressAsync();
             Console.WriteLine($"Ping result: {ping.Data.Status}");
 
             //var address = await client.CreateAddressAsync(coin, toWalletId, toUser);
             //var addr = address.Data.Address;
 
-            var address = await client.GetAddressesAsync(coin, toWalletId, labelContains: toUser);
+            var address = await api.GetAddressesAsync(coin, toWalletId, labelContains: toUser);
             if (address.Data.Addresses.Length != 1)
             {
                 Console.WriteLine($"[ERROR] User {toUser} on the wallet {toWalletId} has {address.Data.Addresses.Length} addresses");
@@ -261,19 +261,19 @@ namespace TestApp
 
             var addr = address.Data.Addresses.Last().Address;
 
-            var verifyResult = await client.VerifyAddressAsync(coin, addr);
+            var verifyResult = await api.VerifyAddressAsync(coin, addr);
             Console.WriteLine($"Address [{addr}] verify: {verifyResult.Data.IsValid}");
 
             var sid = $"st_{DateTime.UtcNow:O}";
 
 
-            var sendResult = await client.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
+            var sendResult = await api.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
             Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
             Console.WriteLine($"rid: {sendResult.Data.Transfer.TransferId}");
             Console.WriteLine(JsonConvert.SerializeObject(sendResult.Data, Formatting.Indented));
 
 
-            sendResult = await client.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
+            sendResult = await api.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
             Console.WriteLine(JsonConvert.SerializeObject(sendResult, Formatting.Indented));
 
 
@@ -285,17 +285,17 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task TestExpress2(IBitGoClient client, string coin, string fromWalletId, string toWalletId, string toUser, string amount)
+        static async Task TestExpress2(IBitGoApi api, string coin, string fromWalletId, string toWalletId, string toUser, string amount)
         {
             Console.Clear();
 
-            var ping = await client.PingExpressAsync();
+            var ping = await api.PingExpressAsync();
             Console.WriteLine($"Ping result: {ping.Data.Status}");
 
             //var address = await client.CreateAddressAsync(coin, toWalletId, toUser);
             //var addr = address.Data.Address;
 
-            var address = await client.GetAddressesAsync(coin, toWalletId, labelContains: toUser);
+            var address = await api.GetAddressesAsync(coin, toWalletId, labelContains: toUser);
             if (address.Data.Addresses.Length != 1)
             {
                 Console.WriteLine($"[ERROR] User {toUser} on the wallet {toWalletId} has {address.Data.Addresses.Length} addresses");
@@ -304,7 +304,7 @@ namespace TestApp
 
             var addr = address.Data.Addresses.Last().Address;
 
-            var verifyResult = await client.VerifyAddressAsync(coin, addr);
+            var verifyResult = await api.VerifyAddressAsync(coin, addr);
             Console.WriteLine($"Address [{addr}] verify: {verifyResult.Data.IsValid}");
 
             var sid = $"st_{DateTime.UtcNow:O}";
@@ -319,7 +319,7 @@ namespace TestApp
             };
 
 
-            var sendResult = await client.SendCoinsAsync(coin, fromWalletId, request);
+            var sendResult = await api.SendCoinsAsync(coin, fromWalletId, request);
             Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
             Console.WriteLine($"rid: {sendResult.Data.Transfer.TransferId}");
 
@@ -328,7 +328,7 @@ namespace TestApp
             Console.ReadLine();
         }
 
-        static async Task ApplyWebhook(IBitGoClient client)
+        static async Task ApplyWebhook(IBitGoApi api)
         {
             var wallets = new Dictionary<string, string[]>()
             {
@@ -345,20 +345,20 @@ namespace TestApp
             
             foreach (var walletInfo in wallets)
             {
-                var webhooks = await client.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
+                var webhooks = await api.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
                 Console.WriteLine(JsonSerializer.Serialize(webhooks, new JsonSerializerOptions() { WriteIndented = true }));
                 
                 foreach (var dataWebhook in webhooks.Data.Webhooks)
                 {
-                    var remove = await client.RemoveWebhookAsync(walletInfo.Value[0], walletInfo.Key,
+                    var remove = await api.RemoveWebhookAsync(walletInfo.Value[0], walletInfo.Key,
                         dataWebhook.Type, dataWebhook.Url, dataWebhook.Id);
                     Console.WriteLine(JsonSerializer.Serialize(remove, new JsonSerializerOptions() { WriteIndented = true }));
-                    var add = await client.AddWebhookAsync(walletInfo.Value[0], walletInfo.Key,
+                    var add = await api.AddWebhookAsync(walletInfo.Value[0], walletInfo.Key,
                         dataWebhook.Type, dataWebhook.AllToken, dataWebhook.Url, dataWebhook.Label, 1, false);
                     Console.WriteLine(JsonSerializer.Serialize(remove, new JsonSerializerOptions() { WriteIndented = true }));
                 }
                 
-                webhooks = await client.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
+                webhooks = await api.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
                 Console.WriteLine(JsonSerializer.Serialize(webhooks, new JsonSerializerOptions() { WriteIndented = true }));
             }
             

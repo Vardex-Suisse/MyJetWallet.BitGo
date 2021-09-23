@@ -6,7 +6,7 @@ using MyJetWallet.BitGo.Models.Express;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient
+    public partial class BitGoApi
     {
         public async Task<WebCallResult<PingExpressResult>> PingExpressAsync(CancellationToken cancellationToken = default)
         {

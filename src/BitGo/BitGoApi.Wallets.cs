@@ -7,7 +7,7 @@ using MyJetWallet.BitGo.Models.Wallet;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient
+    public partial class BitGoApi
     {
         #region Wallets
         /// <summary>

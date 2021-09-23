@@ -15,7 +15,7 @@ using MyJetWallet.BitGo.Models.Webhook;
 
 namespace MyJetWallet.BitGo
 {
-    public interface IBitGoClient
+    public interface IBitGoApi
     {
         Task<WebCallResult<PingExpressResult>> PingExpressAsync(CancellationToken cancellationToken = default);
         Task<WebCallResult<VerifyAddressResult>> VerifyAddressAsync(string coin, string address, CancellationToken cancellationToken = default);

@@ -6,7 +6,7 @@ using MyJetWallet.BitGo.Models.Webhook;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient
+    public partial class BitGoApi
     {
         /// <summary>
         /// List webhooks set up on the wallet

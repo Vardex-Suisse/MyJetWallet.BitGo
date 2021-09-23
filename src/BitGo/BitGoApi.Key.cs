@@ -5,7 +5,7 @@ using MyJetWallet.BitGo.Models.Key;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient
+    public partial class BitGoApi
     {
         #region Key
         /// <summary>

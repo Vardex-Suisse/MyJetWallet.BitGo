@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient: IDisposable, IBitGoClient
+    public partial class BitGoApi: IDisposable, IBitGoApi
     {
         public const string MainPublicApi = "https://www.bitgo.com/api/v2";
         public const string TestPublicApi = "https://test.bitgo.com/api/v2";
@@ -33,13 +33,13 @@ namespace MyJetWallet.BitGo
         #endregion
 
         #region CTOR
-        public BitGoClient(string accessToken, BitGoNetwork network = BitGoNetwork.Main)
+        public BitGoApi(string accessToken, BitGoNetwork network = BitGoNetwork.Main)
         {
             this.EndpointUrl = network == BitGoNetwork.Main ? MainPublicApi : TestPublicApi;
             this.SetAccessToken(accessToken);
         }
 
-        public BitGoClient(string accessToken, string apiRootUrl)
+        public BitGoApi(string accessToken, string apiRootUrl)
         {
             if (string.IsNullOrEmpty(apiRootUrl))
                 throw new ArgumentException("api url cannot be empty", nameof(apiRootUrl));

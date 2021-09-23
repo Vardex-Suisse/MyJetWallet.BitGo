@@ -6,7 +6,7 @@ using MyJetWallet.BitGo.Models.User;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoClient
+    public partial class BitGoApi
     {
         #region User
         /// <summary>

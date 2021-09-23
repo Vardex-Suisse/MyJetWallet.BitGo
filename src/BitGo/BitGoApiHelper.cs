@@ -8,7 +8,7 @@ namespace MyJetWallet.BitGo
 {
     public static class BitGoClientHelper
     {
-        public static async Task<TransferInfo> TryGetTransferAsync(this IBitGoClient client, 
+        public static async Task<TransferInfo> TryGetTransferAsync(this IBitGoApi api, 
             string coin,
             string walletId,
             string transferId = null,
@@ -16,7 +16,7 @@ namespace MyJetWallet.BitGo
         {
             try
             {
-                var transfer = await client.GetTransferAsync(coin, walletId, transferId, cancellationToken);
+                var transfer = await api.GetTransferAsync(coin, walletId, transferId, cancellationToken);
 
                 return transfer.Data;
             }
