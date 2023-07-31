@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using MyJetWallet.BitGo.Models;
 using MyJetWallet.BitGo.Models.Express;
+using static MyJetWallet.BitGo.Models.Express.SendManyRequestData;
 
 namespace MyJetWallet.BitGo
 {
@@ -21,6 +23,38 @@ namespace MyJetWallet.BitGo
             };
 
             return await this.PostAsync<VerifyAddressResult>($"{this.EndpointUrl}/{coin}/verifyaddress", request, cancellationToken);
+        }
+
+        public async Task<WebCallResult<SendCoinResult>> SendManyAsync(
+            string coin,
+            string walletId,
+            SendManyRequestData request,
+            CancellationToken cancellationToken = default)
+        {
+            var resp = await this.PostAsync<SendCoinResult>($"{this.EndpointUrl}/{coin}/wallet/{walletId}/sendmany", request, cancellationToken);
+
+            if (resp.Data != null)
+            {
+                resp.Data.IsRequireApproval = resp.ResponseStatusCode == HttpStatusCode.Accepted;
+            }
+
+            return resp;
+        }
+
+        public Task<WebCallResult<SendCoinResult>> SendManyAsync(
+            string coin, string walletId, string walletPassphrase,
+            List<Recipient> recipients, string sequenceId = null, SendManyRequestData.MemoType memo = null,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new SendManyRequestData()
+            {
+                WalletPassphrase = walletPassphrase,
+                Recipients = recipients,
+                SequenceId = sequenceId,
+                Memo = memo
+            };
+
+            return SendManyAsync(coin, walletId, request, cancellationToken);
         }
 
         public async Task<WebCallResult<SendCoinResult>> SendCoinsAsync(
@@ -42,8 +76,8 @@ namespace MyJetWallet.BitGo
 
         public Task<WebCallResult<SendCoinResult>> SendCoinsAsync(
             string coin, string walletId, string walletPassphrase,
-            string sequenceId, string amount, 
-            string address, MemoType memo = null, 
+            string sequenceId, string amount,
+            string address, SendCoinsRequestData.MemoType memo = null,
             CancellationToken cancellationToken = default)
         {
             var request = new SendCoinsRequestData()

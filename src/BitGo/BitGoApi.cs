@@ -14,14 +14,14 @@ using Newtonsoft.Json;
 
 namespace MyJetWallet.BitGo
 {
-    public partial class BitGoApi: IDisposable, IBitGoApi
+    public partial class BitGoApi : IDisposable, IBitGoApi
     {
         public const string MainPublicApi = "https://www.bitgo.com/api/v2";
         public const string TestPublicApi = "https://test.bitgo.com/api/v2";
 
         #region Properties
         public string EndpointUrl { get; private set; }
-        
+
         public SecureString AccessToken { get; private set; }
 
         public bool ThrowThenErrorResponse { get; set; } = true;
@@ -84,6 +84,10 @@ namespace MyJetWallet.BitGo
             var handler = new HttpClientHandler()
             {
                 AllowAutoRedirect = false
+            };
+            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
             };
 
             var client = new HttpClient(handler);
@@ -179,7 +183,7 @@ namespace MyJetWallet.BitGo
                 return new WebCallResult<T>(response, default(T), error);
             }
 
-            if (response.StatusCode == HttpStatusCode.OK || 
+            if (response.StatusCode == HttpStatusCode.OK ||
                 response.StatusCode == HttpStatusCode.Accepted ||
                 response.StatusCode == HttpStatusCode.PartialContent)
             {

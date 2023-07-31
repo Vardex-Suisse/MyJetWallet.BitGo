@@ -1,24 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 // ReSharper disable InconsistentNaming
 
 namespace MyJetWallet.BitGo.Models.Express
 {
-    public class SendCoinsRequestData
+    public class SendManyRequestData
     {
         /// <summary>
-        /// Destination address(<= 250 characters)
+        /// Recipients of coins
         /// </summary>
-        [JsonProperty("address")]
-        public string Address { get; set; }
-
-        /// <summary>
-        /// Transfer amount
-        /// Integer
-        /// </summary>
-        [JsonProperty("amount")]
-        public string Amount { get; set; }
-
+        [JsonProperty("recipients")]
+        public List<Recipient> Recipients { get; set; }
         /// <summary>
         /// Passphrase to decrypt the user key on the wallet
         /// </summary>
@@ -267,6 +260,22 @@ namespace MyJetWallet.BitGo.Models.Express
         {
             [JsonProperty("expireTime")]
             public DateTime expireTime { get; set; }
+        }
+
+        public class Recipient
+        {
+            /// <summary>
+            /// Destination address(<= 250 characters)
+            /// </summary>
+            [JsonProperty("address")]
+            public string Address { get; set; }
+
+            /// <summary>
+            /// Transfer amount
+            /// Integer
+            /// </summary>
+            [JsonProperty("amount")]
+            public string Amount { get; set; }
         }
 
         public class MemoType

@@ -15,13 +15,14 @@ namespace TestApp
 {
     class Program
     {
-        private static string _walletPassphrase1;
+        private static string walletID = "648e02967df42d00070d7da7288629a9";
+        private static string walletPassphrase = "4Yy.KeX3fmBCZn4Dp2T3wiD486*7Jsf@DbWciaJ!2AqGKBJRKzHiC3*qoqLW9M6ffqo.Uh49QErLxx6vnuQt4GBRe!qPyx-P6H_E";
+        private static string accessToken = "v2x6f3ff89fb3179e7575f6b16f756bc423cd5eb99f367d30967ff72188d6718d69";
+        private static string apiUrl = "https://10.114.16.3";
 
         static async Task Main(string[] args)
         {
-            var accessToken = Environment.GetEnvironmentVariable("AccessToken");
-            var apiUrl = Environment.GetEnvironmentVariable("ApiUrl");
-            _walletPassphrase1 = Environment.GetEnvironmentVariable("WalletPassphrase_1");
+
 
             if (string.IsNullOrEmpty(accessToken))
             {
@@ -35,7 +36,7 @@ namespace TestApp
                 return;
             }
 
-            if (string.IsNullOrEmpty(_walletPassphrase1))
+            if (string.IsNullOrEmpty(walletPassphrase))
             {
                 Console.WriteLine("WalletPassphrase_1 is empty. Please setup env variable");
                 return;
@@ -45,45 +46,7 @@ namespace TestApp
 
             try
             {
-
-                //await TestAddresses(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                //await TestAddresses(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
-
-                //await TestAddresses(client, "talgo", "604f7e965095850076f7d697fcea9995", "jetwallet|-|alex|-|SP-alex");
-
-                //await TestAddresses(client, "tbtc", "6054ba9ca9cc0e0024a867a7d8b401b2", "jetwallet|-|alex|-|SP-alex");
-                //await TestAddresses(client, "tbtc", "6054ba9ca9cc0e0024a867a7d8b401b2");
-
-                //await TestAddresses(client, "txrp", "60584aaded0090000628ce59c01f3a5e");
-
-                //await TestAddresses(client, "xlm", "6059baa1db5c7e02866ab97d17e557b6");
-
-                //await TestGetTransferById(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a", "605b162bc6cfd60006c880f8f140e5f9");
-
-                // await TestGetTransfer(client, "teos", "60584dcc6f5d31001d5a59371aeeb60a");
-                // await ApplyWebhook(client);
-                // await TestEnterpise(client, "teth", "605d56ec87a7fd0006730d335d16b81b");
-                // await TestPendingApproval(client);
-                await TestSpendingLimits(api);
-                //await TestGetTransfer(client, "txlm", "601176c94b46f40446749cb183f843c0");
-                //await TestGetTransfer(client, "txlm", "6048c3e46fd304026642e95b6a28f976");
-
-                //await TestGetTransfer(client, "txrp", "60584aaded0090000628ce59c01f3a5e");
-
-                //await TestGetTransfer(client, "talgo", "604f7e965095850076f7d697fcea9995");
-                //await TestGetTransfer(client, "txrp", "604f8990e32c2f000600f5411c68dacd");
-
-
-
-                //await TestExpress(client, "txlm", "601176c94b46f40446749cb183f843c0", "6048c3e46fd304026642e95b6a28f976", "jetwallet|-|alex|-|SP-alex", "100000000");
-
-                //await TestExpress(client, "tbtc", "6013e7b3d11c3704c6b47cf6191e74a8", "604f5afa9ca16d000682de35465fc6e8", "jetwallet|-|alex|-|SP-alex", "10000");
-
-                //await TestExpress(client, "txrp", "60584aaded0090000628ce59c01f3a5e", "60584aaded0090000628ce59c01f3a5e", "jetwallet|-|alex|-|SP-alex", "11000000");
-
-
-                //transfer":"605b162bc6cfd60006c880f8f140e5f9","coin":"teos","type":"transfer","state":"confirmed","wallet":"60584dcc6f5d31001d5a59371aeeb60a"
-
+                await TestWithdrawMany(api);
             }
             catch (BitGoErrorException ex)
             {
@@ -99,7 +62,7 @@ namespace TestApp
 
             var index = 1;
 
-            var addressList =  await api.GetAddressesAsync(coin, walletId, limit: 5);
+            var addressList = await api.GetAddressesAsync(coin, walletId, limit: 5);
 
             var count = addressList.Data.TotalAddressCount;
             Console.WriteLine($"Address list ({count}):");
@@ -122,7 +85,7 @@ namespace TestApp
 
             Console.WriteLine("---------");
 
-            
+
 
             label ??= $"test:{count + 1}";
 
@@ -140,7 +103,7 @@ namespace TestApp
                 Console.WriteLine("Existing address:");
                 Console.WriteLine($"[{index}]{newAddress.AddressId}|{newAddress.Label}|{newAddress.Address}");
             }
-            
+
             Console.WriteLine();
             Console.WriteLine("Press to continue");
             Console.ReadLine();
@@ -153,7 +116,7 @@ namespace TestApp
             var transferList = await api.GetTransfersAsync(coin, walletId, limit: 5);
 
             Console.WriteLine("Transfer List:");
-            
+
             foreach (var transfer in transferList.Data.Transfers)
             {
                 var label = transfer.Entries.FirstOrDefault(e => e.Value > 0)?.Label;
@@ -225,11 +188,38 @@ namespace TestApp
             Console.ReadLine();
         }
 
+        static async Task TestWithdrawMany(IBitGoApi api)
+        {
+            Console.Clear();
+            List<SendManyRequestData.Recipient> recipients = new List<SendManyRequestData.Recipient>
+            {
+                new SendManyRequestData.Recipient() { Address = "0xe281d56240817bd3623bbab09ecad901e9b5bc36", Amount = "10000000000000000" },
+                new SendManyRequestData.Recipient() { Address = "0xe281d56240817bd3623bbab09ecad901e9b5bc36", Amount = "10000000000000000" },
+                new SendManyRequestData.Recipient() { Address = "0xe281d56240817bd3623bbab09ecad901e9b5bc36", Amount = "10000000000000000" }
+            };
+
+            var limits = await api.SendManyAsync(
+                "eth",
+                walletID,
+                walletPassphrase,
+                recipients
+                );
+
+            Console.WriteLine(JsonSerializer.Serialize(limits, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            }));
+
+            Console.WriteLine();
+            Console.WriteLine("Press to continue");
+            Console.ReadLine();
+        }
+
         static async Task TestSpendingLimits(IBitGoApi api)
         {
             Console.Clear();
 
-            var limits = await api.GetSpendingLimitsForWalletAsync("teth","60a6155d49219200062e5dd0291177df");
+            var limits = await api.GetSpendingLimitsForWalletAsync("teth", "60a6155d49219200062e5dd0291177df");
             Console.WriteLine(JsonSerializer.Serialize(limits, new JsonSerializerOptions()
             {
                 WriteIndented = true
@@ -267,18 +257,14 @@ namespace TestApp
             var sid = $"st_{DateTime.UtcNow:O}";
 
 
-            var sendResult = await api.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
+            var sendResult = await api.SendCoinsAsync(coin, fromWalletId, walletPassphrase, amount: amount, address: addr, sequenceId: sid);
             Console.WriteLine($"Send coin. Pending Approval: {sendResult.Data.IsRequireApproval}, Tx: {sendResult.Data.Transfer.TxId}");
             Console.WriteLine($"rid: {sendResult.Data.Transfer.TransferId}");
             Console.WriteLine(JsonConvert.SerializeObject(sendResult.Data, Formatting.Indented));
 
 
-            sendResult = await api.SendCoinsAsync(coin, fromWalletId, _walletPassphrase1, amount: amount, address: addr, sequenceId: sid);
+            sendResult = await api.SendCoinsAsync(coin, fromWalletId, walletPassphrase, amount: amount, address: addr, sequenceId: sid);
             Console.WriteLine(JsonConvert.SerializeObject(sendResult, Formatting.Indented));
-
-
-
-
 
             Console.WriteLine();
             Console.WriteLine("Press to continue");
@@ -312,7 +298,7 @@ namespace TestApp
 
             var request = new SendCoinsRequestData()
             {
-                WalletPassphrase = _walletPassphrase1,
+                WalletPassphrase = walletPassphrase,
                 Address = addr,
                 Amount = amount,
                 SequenceId = sid,
@@ -340,14 +326,14 @@ namespace TestApp
                 // {"60584becbc3e2600240548d78e61c02b", new []{"TALGO", "POC-ALGO-3"}},
                 // {"60584dcc6f5d31001d5a59371aeeb60a", new []{"TEOS", "POC-EOS-3"}}
             };
-            
+
             Console.Clear();
-            
+
             foreach (var walletInfo in wallets)
             {
                 var webhooks = await api.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
                 Console.WriteLine(JsonSerializer.Serialize(webhooks, new JsonSerializerOptions() { WriteIndented = true }));
-                
+
                 foreach (var dataWebhook in webhooks.Data.Webhooks)
                 {
                     var remove = await api.RemoveWebhookAsync(walletInfo.Value[0], walletInfo.Key,
@@ -357,11 +343,11 @@ namespace TestApp
                         dataWebhook.Type, dataWebhook.AllToken, dataWebhook.Url, dataWebhook.Label, 1, false);
                     Console.WriteLine(JsonSerializer.Serialize(remove, new JsonSerializerOptions() { WriteIndented = true }));
                 }
-                
+
                 webhooks = await api.ListWebhooksAsync(walletInfo.Value[0], walletInfo.Key);
                 Console.WriteLine(JsonSerializer.Serialize(webhooks, new JsonSerializerOptions() { WriteIndented = true }));
             }
-            
+
             Console.WriteLine();
             Console.WriteLine("Press to continue");
             Console.ReadLine();

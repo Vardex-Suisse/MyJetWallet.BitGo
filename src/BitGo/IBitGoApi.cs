@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MyJetWallet.BitGo.Models;
@@ -12,6 +13,7 @@ using MyJetWallet.BitGo.Models.Transfer;
 using MyJetWallet.BitGo.Models.User;
 using MyJetWallet.BitGo.Models.Wallet;
 using MyJetWallet.BitGo.Models.Webhook;
+using static MyJetWallet.BitGo.Models.Express.SendManyRequestData;
 
 namespace MyJetWallet.BitGo
 {
@@ -19,6 +21,17 @@ namespace MyJetWallet.BitGo
     {
         Task<WebCallResult<PingExpressResult>> PingExpressAsync(CancellationToken cancellationToken = default);
         Task<WebCallResult<VerifyAddressResult>> VerifyAddressAsync(string coin, string address, CancellationToken cancellationToken = default);
+
+        Task<WebCallResult<SendCoinResult>> SendManyAsync(
+            string coin,
+            string walletId,
+            SendManyRequestData request,
+            CancellationToken cancellationToken = default);
+
+        Task<WebCallResult<SendCoinResult>> SendManyAsync(
+            string coin, string walletId, string walletPassphrase,
+            List<Recipient> recipients, string sequenceId = null, SendManyRequestData.MemoType memo = null,
+            CancellationToken cancellationToken = default);
 
         Task<WebCallResult<SendCoinResult>> SendCoinsAsync(
             string coin,
@@ -28,8 +41,8 @@ namespace MyJetWallet.BitGo
 
         Task<WebCallResult<SendCoinResult>> SendCoinsAsync(
             string coin, string walletId, string walletPassphrase,
-            string sequenceId, string amount, 
-            string address, MemoType memo = null, 
+            string sequenceId, string amount,
+            string address, SendCoinsRequestData.MemoType memo = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -1052,7 +1065,7 @@ namespace MyJetWallet.BitGo
             int numConfirmations,
             bool listenToFailureStates,
             CancellationToken cancellationToken = default(CancellationToken));
-        
+
         /// <summary>
         /// List webhooks set up on the wallet
         /// </summary>
