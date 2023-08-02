@@ -46,7 +46,9 @@ namespace TestApp
 
             try
             {
-                await TestWithdrawMany(api);
+                var result = api.GetWallet("eth", walletID);
+                Console.WriteLine(result);
+                // await TestWithdrawMany(api);
             }
             catch (BitGoErrorException ex)
             {
