@@ -8,7 +8,6 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 using MyJetWallet.BitGo.Models;
 using Newtonsoft.Json;
 
@@ -121,34 +120,34 @@ namespace MyJetWallet.BitGo
 
         private async Task<WebCallResult<T>> GetAsync<T>(string url, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var client = this.GetHttpClient();
-            var response = await client.GetAsync($"{url}", cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var client = GetHttpClient();
+            var response = client.GetAsync($"{url}", cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            var content = response.Content.ReadAsStringAsync(cancellationToken);
 
             // Return
-            return this.EvaluateResponse<T>(response, content);
+            return EvaluateResponse<T>(response, content.Result);
         }
 
         private async Task<WebCallResult<T>> PostAsync<T>(string url, object obj = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var client = GetHttpClient();
             var data = JsonConvert.SerializeObject(obj ?? new object());
-            var response = await client.PostAsync($"{url}", new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var response = client.PostAsync($"{url}", new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            var content = response.Content.ReadAsStringAsync(cancellationToken);
 
             // Return
-            return this.EvaluateResponse<T>(response, content);
+            return EvaluateResponse<T>(response, content.Result);
         }
 
         private async Task<WebCallResult<T>> PutAsync<T>(string url, object obj = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var client = GetHttpClient();
             var data = JsonConvert.SerializeObject(obj ?? new object());
-            var response = await client.PutAsync($"{url}", new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var response = client.PutAsync($"{url}", new StringContent(data, Encoding.UTF8, "application/json"), cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            var content = response.Content.ReadAsStringAsync(cancellationToken);
 
             // Return
-            return this.EvaluateResponse<T>(response, content);
+            return EvaluateResponse<T>(response, content.Result);
         }
 
         private async Task<WebCallResult<T>> DeleteAsync<T>(string url, object obj = null, CancellationToken cancellationToken = default(CancellationToken))
@@ -157,11 +156,11 @@ namespace MyJetWallet.BitGo
             var request = new HttpRequestMessage(HttpMethod.Delete, $"{url}");
             var data = JsonConvert.SerializeObject(obj ?? new object());
             request.Content = new StringContent(data, Encoding.UTF8, "application/json");
-            var response = await client.SendAsync(request, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var response = client.SendAsync(request, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            var content = response.Content.ReadAsStringAsync(cancellationToken);
 
             // Return
-            return this.EvaluateResponse<T>(response, content);
+            return EvaluateResponse<T>(response, content.Result);
         }
 
         private WebCallResult<T> EvaluateResponse<T>(HttpResponseMessage response, string content)

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyJetWallet.BitGo", "src\BitGo\MyJetWallet.BitGo.csproj", "{91E12075-4EF0-4700-80FB-031775A5CA6B}"
 EndProject
@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{91
 		.github\workflows\release-api-client.yml = .github\workflows\release-api-client.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWinForm", "TestWinForm\TestWinForm.csproj", "{2562F882-756D-4B6B-943D-F22F15B09F58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{B4C7A887-03DE-41DF-8CCF-0268E3DC6318}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4C7A887-03DE-41DF-8CCF-0268E3DC6318}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4C7A887-03DE-41DF-8CCF-0268E3DC6318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2562F882-756D-4B6B-943D-F22F15B09F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2562F882-756D-4B6B-943D-F22F15B09F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2562F882-756D-4B6B-943D-F22F15B09F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2562F882-756D-4B6B-943D-F22F15B09F58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
