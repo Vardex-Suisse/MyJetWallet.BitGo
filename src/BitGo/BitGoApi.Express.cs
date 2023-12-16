@@ -43,7 +43,7 @@ namespace MyJetWallet.BitGo
 
         public Task<WebCallResult<SendCoinResult>> SendManyAsync(
             string coin, string walletId, string walletPassphrase,
-            List<Recipient> recipients, string sequenceId = null, SendManyRequestData.MemoType memo = null,
+            List<Recipient> recipients, string sequenceId = null, MemoType memo = null,
             CancellationToken cancellationToken = default)
         {
             var request = new SendManyRequestData()
@@ -51,6 +51,23 @@ namespace MyJetWallet.BitGo
                 WalletPassphrase = walletPassphrase,
                 Recipients = recipients,
                 SequenceId = sequenceId,
+                Memo = memo
+            };
+
+            return SendManyAsync(coin, walletId, request, cancellationToken);
+        }
+
+        public Task<WebCallResult<SendCoinResult>> SendManyAsync(
+            string coin, string walletId, string walletPassphrase,
+            List<Recipient> recipients, int numBlock, string sequenceId = null, MemoType memo = null,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new SendManyRequestData()
+            {
+                WalletPassphrase = walletPassphrase,
+                Recipients = recipients,
+                SequenceId = sequenceId,
+                NumBlocks = numBlock,
                 Memo = memo
             };
 
