@@ -33,6 +33,11 @@ namespace MyJetWallet.BitGo
             List<Recipient> recipients, string sequenceId = null, SendManyRequestData.MemoType memo = null,
             CancellationToken cancellationToken = default);
 
+        Task<WebCallResult<SendCoinResult>> SendManyAsync(
+            string coin, string walletId, string walletPassphrase,
+            List<Recipient> recipients, int numBlock, string sequenceId = null, SendManyRequestData.MemoType memo = null,
+            CancellationToken cancellationToken = default);
+
         Task<WebCallResult<SendCoinResult>> SendCoinsAsync(
             string coin,
             string walletId,

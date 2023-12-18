@@ -10,9 +10,10 @@ This package adds extra support to send batch transactions</Description>
     <RepositoryUrl>https://github.com/MyJetWallet/MyJetWallet.BitGo</RepositoryUrl>
     <PackageTags>BitGo BitGo.Net C# .Net CryptoCurrency Wallet Exchange Rest API Wrapper</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.3.1</Version>
+    <Version>1.3.4</Version>
     <PackageId>$(AssemblyName)-SendMany</PackageId>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
